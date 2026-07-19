@@ -1,111 +1,106 @@
-import React from 'react';
-import {
-  GraduationCap,
-  LogIn,
-  ShieldCheck,
-  CalendarDays,
-  ClipboardList,
-  FileText,
-} from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { LogIn, ShieldCheck } from 'lucide-react';
 
 interface LandingPageProps {
   onNavigate: (path: 'login' | 'verify') => void;
 }
 
-const Feature: React.FC<{ icon: React.ReactNode; title: string; desc: string }> = ({ icon, title, desc }) => (
-  <div className="flex space-x-4 items-start">
-    <div className="w-10 h-10 rounded-sm bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
-      {icon}
-    </div>
-    <div>
-      <p className="text-white text-sm font-semibold">{title}</p>
-      <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">{desc}</p>
-    </div>
-  </div>
-);
-
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+  const yearRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (yearRef.current) yearRef.current.textContent = String(new Date().getFullYear());
+  }, []);
+
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
-      {/* Topbar */}
-      <header className="border-b border-slate-800 px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-sm flex items-center justify-center">
-            <GraduationCap size={16} className="text-white" />
-          </div>
-          <div>
-            <p className="text-white font-serif font-semibold text-lg leading-none">IMETRO</p>
-            <p className="text-slate-500 text-[10px] uppercase tracking-widest">Portal Académico</p>
-          </div>
-        </div>
-        <button
-          onClick={() => onNavigate('login')}
-          className="flex items-center space-x-2 text-slate-400 hover:text-white text-xs border border-slate-700 hover:border-slate-500 px-4 py-2 rounded-sm transition-colors cursor-pointer"
-        >
-          <LogIn size={13} />
-          <span>Entrar no Sistema</span>
-        </button>
-      </header>
+    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col">
 
-      {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center py-20">
-        {/* Badge */}
-        <div className="inline-flex items-center space-x-2 bg-blue-950 border border-blue-800 text-blue-300 text-[11px] uppercase tracking-widest px-4 py-1.5 rounded-full mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-          <span>Sistema Académico Digital</span>
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-10 py-5 border-b border-slate-100">
+        <div className="flex items-baseline space-x-2.5">
+          <span className="font-serif text-xl font-bold tracking-tight text-slate-900">IMETRO</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-slate-400 hidden sm:inline">
+            Instituto Superior Politécnico
+          </span>
         </div>
 
-        {/* Headline */}
-        <h1 className="text-white font-serif text-5xl font-bold max-w-2xl leading-tight mb-4">
-          Portal Académico<br />
-          <span className="text-blue-400">IMETRO</span>
-        </h1>
-        <p className="text-slate-400 text-base max-w-md leading-relaxed mb-12">
-          Gestão inteligente de presenças, emissão de certificados com assinatura digital e optimização automática de grades horárias.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-20">
+        <div className="flex items-center space-x-6">
+          <button
+            onClick={() => onNavigate('verify')}
+            className="text-xs text-slate-500 hover:text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700 transition-colors cursor-pointer"
+          >
+            Verificar documento
+          </button>
           <button
             onClick={() => onNavigate('login')}
-            className="flex items-center justify-center space-x-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3.5 rounded-sm transition-colors text-sm cursor-pointer"
+            className="text-xs bg-slate-900 text-white px-5 py-2 hover:bg-blue-700 transition-colors duration-300 cursor-pointer font-medium"
           >
-            <LogIn size={16} />
-            <span>Aceder ao Sistema</span>
+            Entrar
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <main className="flex-1 flex flex-col justify-center px-10 pt-16 pb-12 max-w-5xl">
+
+        <p className="text-[11px] uppercase tracking-[0.25em] text-slate-400 mb-6">
+          Sistema Académico — Luanda, Angola
+        </p>
+
+        <h1 className="font-serif text-[clamp(3.5rem,8vw,6.5rem)] font-bold leading-[0.95] text-slate-900 mb-8 max-w-3xl">
+          O portal<br />
+          <em className="not-italic text-blue-700">académico</em><br />
+          do IMETRO.
+        </h1>
+
+        <p className="text-slate-500 text-base max-w-sm leading-relaxed mb-10">
+          Um lugar onde docentes registam presenças, a secretaria emite certificados,
+          e os horários encaixam sem conflitos. Simples assim.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-6">
+          <button
+            onClick={() => onNavigate('login')}
+            className="flex items-center space-x-2 bg-slate-900 text-white text-sm px-8 py-3.5 hover:bg-blue-700 transition-colors duration-300 cursor-pointer font-medium"
+          >
+            <LogIn size={15} />
+            <span>Aceder ao sistema</span>
           </button>
           <button
             onClick={() => onNavigate('verify')}
-            className="flex items-center justify-center space-x-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-8 py-3.5 rounded-sm transition-colors text-sm cursor-pointer"
+            className="flex items-center space-x-2 text-sm text-slate-500 border-b border-slate-300 pb-0.5 hover:text-slate-900 hover:border-slate-800 transition-colors cursor-pointer"
           >
-            <ShieldCheck size={16} />
-            <span>Validar Documento</span>
+            <ShieldCheck size={13} />
+            <span>Validar um documento</span>
           </button>
         </div>
 
-        {/* Features grid */}
-        <div className="grid sm:grid-cols-3 gap-8 max-w-3xl w-full text-left">
-          <Feature
-            icon={<ClipboardList size={18} className="text-blue-400" />}
-            title="Presenças Inteligentes"
-            desc="Registo por geolocalização e QR Code com detecção automática de fraude."
-          />
-          <Feature
-            icon={<FileText size={18} className="text-blue-400" />}
-            title="Documentos Verificáveis"
-            desc="Diplomas e certificados com assinatura SHA-256 e código de verificação público."
-          />
-          <Feature
-            icon={<CalendarDays size={18} className="text-blue-400" />}
-            title="Grades Horárias"
-            desc="Agendamento de aulas com detecção e resolução automática de conflitos."
-          />
+        {/* Divider + features row */}
+        <div className="border-t border-slate-100 mt-20 pt-8">
+          <div className="flex flex-wrap gap-12 text-xs text-slate-400">
+            <div>
+              <p className="text-slate-800 font-semibold text-sm mb-0.5">Presenças</p>
+              <p>Registo por QR Code e localização</p>
+            </div>
+            <div>
+              <p className="text-slate-800 font-semibold text-sm mb-0.5">Certificados</p>
+              <p>Assinatura SHA-256 verificável publicamente</p>
+            </div>
+            <div>
+              <p className="text-slate-800 font-semibold text-sm mb-0.5">Horários</p>
+              <p>Detecção automática de conflitos</p>
+            </div>
+          </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-5 text-center">
-        <p className="text-slate-600 text-xs">
-          © {new Date().getFullYear()} IMETRO — Instituto Superior de Tecnologias de Informação e Comunicação
+      <footer className="px-10 py-5 border-t border-slate-100 flex items-center justify-between">
+        <p className="text-[11px] text-slate-300">
+          © <span ref={yearRef} /> IMETRO
+        </p>
+        <p className="text-[11px] text-slate-300 hidden sm:block">
+          Secretaria: secretaria@imetro.ao
         </p>
       </footer>
     </div>

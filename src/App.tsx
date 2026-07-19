@@ -6,8 +6,19 @@ import { DocumentsView } from './components/DocumentsView';
 import { SchedulerView } from './components/SchedulerView';
 import { Loader } from './components/Loader';
 import { DocumentVerifyPage } from './components/DocumentVerifyPage';
+import { LandingPage } from './components/LandingPage';
+
+type Route = 'landing' | 'login' | 'verify' | 'dashboard';
+
+function getInitialRoute(): Route {
+  const path = window.location.pathname;
+  if (path.startsWith('/verify')) return 'verify';
+  if (path.startsWith('/login')) return 'login';
+  return 'landing';
+}
 
 function App() {
+  const [route, setRoute] = useState<Route>(getInitialRoute);
   const [authState, setAuthState] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'attendance' | 'document' | 'scheduler'>('attendance');
   const [appLoading, setAppLoading] = useState(true);
@@ -19,17 +30,14 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Public route: /verify — no auth required
-  if (window.location.pathname.startsWith('/verify')) {
-    return <DocumentVerifyPage />;
-  }
-
   const handleLoginSuccess = (data: any) => {
     setAuthState(data);
+    setRoute('dashboard');
   };
 
   const handleLogout = () => {
     setAuthState(null);
+    setRoute('landing');
   };
 
   const handleTabChange = (tab: 'attendance' | 'document' | 'scheduler') => {
@@ -46,11 +54,23 @@ function App() {
     return <Loader message="A inicializar o sistema..." />;
   }
 
-  // Auth wall
-  if (!authState) {
+  // Public routes
+  if (route === 'verify') return <DocumentVerifyPage />;
+  if (route === 'landing') {
+    return (
+      <LandingPage
+        onNavigate={(path) => {
+          if (path === 'verify') setRoute('verify');
+          else setRoute('login');
+        }}
+      />
+    );
+  }
+  if (route === 'login' || !authState) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
+  // Dashboard
   const renderActiveTab = () => {
     if (tabLoading) {
       return (
@@ -68,28 +88,21 @@ function App() {
     }
 
     switch (activeTab) {
-      case 'attendance':
-        return <AttendanceView user={authState.user} />;
-      case 'document':
-        return <DocumentsView user={authState.user} />;
-      case 'scheduler':
-        return <SchedulerView user={authState.user} />;
-      default:
-        return <AttendanceView user={authState.user} />;
+      case 'attendance': return <AttendanceView user={authState.user} />;
+      case 'document': return <DocumentsView user={authState.user} />;
+      case 'scheduler': return <SchedulerView user={authState.user} />;
+      default: return <AttendanceView user={authState.user} />;
     }
   };
 
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900 select-none">
-      {/* Dynamic Navigation Sidebar */}
       <Sidebar
         user={authState.user}
         activeTab={activeTab}
         setActiveTab={handleTabChange}
         onLogout={handleLogout}
       />
-
-      {/* Main Panel Viewport */}
       <main className="flex-1 p-8 overflow-y-auto max-w-7xl mx-auto w-full">
         {renderActiveTab()}
       </main>
