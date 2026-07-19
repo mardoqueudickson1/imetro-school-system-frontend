@@ -8,18 +8,31 @@ import { Loader } from './components/Loader';
 import { DocumentVerifyPage } from './components/DocumentVerifyPage';
 import { LandingPage } from './components/LandingPage';
 
+const SESSION_KEY = 'imetro_session';
+
 type Route = 'landing' | 'login' | 'verify' | 'dashboard';
 
-function getInitialRoute(): Route {
+function getSavedSession(): any | null {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function getInitialRoute(savedSession: any | null): Route {
   const path = window.location.pathname;
   if (path.startsWith('/verify')) return 'verify';
+  if (savedSession) return 'dashboard';
   if (path.startsWith('/login')) return 'login';
   return 'landing';
 }
 
 function App() {
-  const [route, setRoute] = useState<Route>(getInitialRoute);
-  const [authState, setAuthState] = useState<any | null>(null);
+  const savedSession = getSavedSession();
+  const [route, setRoute] = useState<Route>(() => getInitialRoute(savedSession));
+  const [authState, setAuthState] = useState<any | null>(savedSession);
   const [activeTab, setActiveTab] = useState<'attendance' | 'document' | 'scheduler'>('attendance');
   const [appLoading, setAppLoading] = useState(true);
   const [tabLoading, setTabLoading] = useState(false);
@@ -32,11 +45,13 @@ function App() {
 
   const handleLoginSuccess = (data: any) => {
     setAuthState(data);
+    localStorage.setItem(SESSION_KEY, JSON.stringify(data));
     setRoute('dashboard');
   };
 
   const handleLogout = () => {
     setAuthState(null);
+    localStorage.removeItem(SESSION_KEY);
     setRoute('landing');
   };
 
@@ -54,9 +69,11 @@ function App() {
     return <Loader message="A inicializar o sistema..." />;
   }
 
-  // Public routes
-  if (route === 'verify') return <DocumentVerifyPage onBack={() => setRoute('landing')} />;
-  if (route === 'landing') {
+  // Public verification route
+  if (route === 'verify') return <DocumentVerifyPage onBack={() => setRoute(authState ? 'dashboard' : 'landing')} />;
+
+  // Landing only for unauthenticated users
+  if (route === 'landing' && !authState) {
     return (
       <LandingPage
         onNavigate={(path) => {
@@ -66,11 +83,16 @@ function App() {
       />
     );
   }
-  if (route === 'login' || !authState) {
+
+  if ((route === 'login' || route === 'landing') && !authState) {
     return <Login onLoginSuccess={handleLoginSuccess} onBack={() => setRoute('landing')} />;
   }
 
-  // Dashboard
+  if (!authState) {
+    return <Login onLoginSuccess={handleLoginSuccess} onBack={() => setRoute('landing')} />;
+  }
+
+  // Authenticated dashboard
   const renderActiveTab = () => {
     if (tabLoading) {
       return (

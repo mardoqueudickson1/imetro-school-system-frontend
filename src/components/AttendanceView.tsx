@@ -413,7 +413,7 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({ user }) => {
                     <div>
                       <p className="font-extrabold text-slate-950">{sh.lesson.course.name}</p>
                       <span className="text-[10px] text-slate-500 block mt-1">
-                        Dia/Hora: {new Date(sh.checkInTime).toLocaleString()}
+                        Dia/Hora: {sh.timestamp ? new Date(sh.timestamp).toLocaleString('pt-PT') : '—'}
                       </span>
                     </div>
 
