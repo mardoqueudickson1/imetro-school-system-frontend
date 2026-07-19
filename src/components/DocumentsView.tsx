@@ -10,6 +10,7 @@ import {
   Sparkles,
   Printer
 } from 'lucide-react';
+import { API_URL } from '../config';
 
 interface DocumentsViewProps {
   user: {
@@ -39,7 +40,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ user }) => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await fetch('http://localhost:3001/scheduler/students');
+        const res = await fetch(`${API_URL}/scheduler/students`);
         if (res.ok) {
           const data = await res.json();
           setStudents(data);
@@ -59,7 +60,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ user }) => {
     setIssuedDoc(null);
 
     try {
-      const res = await fetch('http://localhost:3001/documents/issue', {
+      const res = await fetch(`${API_URL}/documents/issue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +90,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ user }) => {
     setVerifyReport(null);
 
     try {
-      const res = await fetch(`http://localhost:3001/documents/verify/${queryCode.trim()}`);
+      const res = await fetch(`${API_URL}/documents/verify/${queryCode.trim()}`);
       if (res.ok) {
         const data = await res.json();
         setVerifyReport(data);

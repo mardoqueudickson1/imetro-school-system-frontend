@@ -9,6 +9,7 @@ import {
   Gauge, 
   AlertCircle 
 } from 'lucide-react';
+import { API_URL } from '../config';
 
 interface AttendanceViewProps {
   user: {
@@ -55,7 +56,7 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({ user }) => {
 
   const fetchLessons = async () => {
     try {
-      const res = await fetch('http://localhost:3001/scheduler/lessons');
+      const res = await fetch(`${API_URL}/scheduler/lessons`);
       if (res.ok) {
         const data = await res.json();
         setLessons(data);
@@ -67,7 +68,7 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({ user }) => {
 
   const fetchStudentHistory = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/attendance/student/${user.id}`);
+      const res = await fetch(`${API_URL}/attendance/student/${user.id}`);
       if (res.ok) {
         const data = await res.json();
         setStudentHistory(data);
@@ -79,7 +80,7 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({ user }) => {
 
   const fetchSessionDetails = async (lessonId: number) => {
     try {
-      const res = await fetch(`http://localhost:3001/attendance/lesson/${lessonId}`);
+      const res = await fetch(`${API_URL}/attendance/lesson/${lessonId}`);
       if (res.ok) {
         const data = await res.json();
         setCheckedStudents(data.checkedInUsers || []);
@@ -94,7 +95,7 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({ user }) => {
     if (!selectedLessonId) return;
 
     try {
-      const res = await fetch('http://localhost:3001/attendance/session', {
+      const res = await fetch(`${API_URL}/attendance/session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -128,7 +129,7 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({ user }) => {
     const lng = isInsideRoom ? 13.182 : 13.18;
 
     try {
-      const res = await fetch('http://localhost:3001/attendance/check-in', {
+      const res = await fetch(`${API_URL}/attendance/check-in`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

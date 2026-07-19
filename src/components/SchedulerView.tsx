@@ -7,6 +7,7 @@ import {
   Activity,
   Plus
 } from 'lucide-react';
+import { API_URL } from '../config';
 
 interface SchedulerViewProps {
   user: {
@@ -46,7 +47,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
 
   const fetchLessons = async () => {
     try {
-      const res = await fetch('http://localhost:3001/scheduler/lessons');
+      const res = await fetch(`${API_URL}/scheduler/lessons`);
       if (res.ok) {
         const data = await res.json();
         setLessons(data);
@@ -58,7 +59,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
 
   const fetchRooms = async () => {
     try {
-      const res = await fetch('http://localhost:3001/scheduler/rooms');
+      const res = await fetch(`${API_URL}/scheduler/rooms`);
       if (res.ok) {
         const data = await res.json();
         setRooms(data);
@@ -70,7 +71,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
 
   const fetchConflicts = async () => {
     try {
-      const res = await fetch('http://localhost:3001/scheduler/conflicts');
+      const res = await fetch(`${API_URL}/scheduler/conflicts`);
       if (res.ok) {
         const data = await res.json();
         setConflicts(data);
@@ -82,7 +83,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch('http://localhost:3001/scheduler/courses');
+      const res = await fetch(`${API_URL}/scheduler/courses`);
       if (res.ok) {
         const data = await res.json();
         setCourses(data);
@@ -94,7 +95,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
 
   const fetchTeachers = async () => {
     try {
-      const res = await fetch('http://localhost:3001/scheduler/teachers');
+      const res = await fetch(`${API_URL}/scheduler/teachers`);
       if (res.ok) {
         const data = await res.json();
         setTeachers(data);
@@ -115,7 +116,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
     }
 
     try {
-      const res = await fetch('http://localhost:3001/scheduler/lessons', {
+      const res = await fetch(`${API_URL}/scheduler/lessons`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -150,7 +151,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
     // Simulate short optimization animation
     setTimeout(async () => {
       try {
-        const res = await fetch('http://localhost:3001/scheduler/optimize', {
+        const res = await fetch(`${API_URL}/scheduler/optimize`, {
           method: 'POST',
         });
         const data = await res.json();

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LogIn, ShieldAlert, GraduationCap } from 'lucide-react';
+import { API_URL } from '../config';
 
 interface LoginProps {
   onLoginSuccess: (user: any) => void;
@@ -30,7 +31,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onBack }) => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:3001/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -53,7 +54,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onBack }) => {
     setErrorMsg('');
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: mockEmail, password: 'password123' }),

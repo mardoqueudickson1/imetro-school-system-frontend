@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, ShieldX, Search, ExternalLink, Hash, GraduationCap, Loader2 } from 'lucide-react';
+import { API_URL } from '../config';
 
 interface VerificationResult {
   isValid: boolean;
@@ -49,7 +50,7 @@ export const DocumentVerifyPage: React.FC<DocumentVerifyPageProps> = ({ onBack }
 
     try {
       const res = await fetch(
-        `http://localhost:3001/documents/verify/${encodeURIComponent(input.trim())}`,
+        `${API_URL}/documents/verify/${encodeURIComponent(input.trim())}`,
       );
       const data: VerificationResult = await res.json();
       setResult(data);
