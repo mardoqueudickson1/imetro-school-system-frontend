@@ -16,13 +16,17 @@ interface VerificationResult {
   };
 }
 
+interface DocumentVerifyPageProps {
+  onBack?: () => void;
+}
+
 const DOC_TYPE_LABELS: Record<string, string> = {
   DIPLOMA: 'Diploma de Licenciatura',
   CERTIFICATE: 'Certificado de Conclusão',
   TRANSCRIPT: 'Histórico Académico',
 };
 
-export const DocumentVerifyPage: React.FC = () => {
+export const DocumentVerifyPage: React.FC<DocumentVerifyPageProps> = ({ onBack }) => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<VerificationResult | null>(null);
@@ -60,15 +64,18 @@ export const DocumentVerifyPage: React.FC = () => {
     <div className="min-h-screen bg-slate-950 flex flex-col">
       {/* Header */}
       <header className="border-b border-slate-800 px-8 py-5 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-500 rounded-sm flex items-center justify-center">
+        <button
+          onClick={onBack}
+          className={`flex items-center space-x-3 ${onBack ? 'cursor-pointer group' : 'cursor-default'}`}
+        >
+          <div className="w-8 h-8 bg-blue-500 rounded-sm flex items-center justify-center group-hover:bg-blue-400 transition-colors">
             <GraduationCap size={16} className="text-white" />
           </div>
-          <div>
-            <p className="text-white font-serif font-semibold text-lg tracking-wide leading-none">IMETRO</p>
+          <div className="text-left">
+            <p className="text-white font-serif font-semibold text-lg leading-none group-hover:text-blue-300 transition-colors">IMETRO</p>
             <p className="text-slate-500 text-[10px] uppercase tracking-widest">Portal Académico</p>
           </div>
-        </div>
+        </button>
         <a
           href="/"
           className="text-slate-400 hover:text-white text-xs flex items-center space-x-1.5 transition-colors"

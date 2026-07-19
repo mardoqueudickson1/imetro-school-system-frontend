@@ -3,9 +3,10 @@ import { LogIn, ShieldAlert, GraduationCap } from 'lucide-react';
 
 interface LoginProps {
   onLoginSuccess: (user: any) => void;
+  onBack?: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onBack }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -81,12 +82,15 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {/* Left Side: Elegant Academic Branding & Quick Access (Grid 7 cols) */}
         <div className="md:col-span-7 space-y-8 pr-4">
           <div className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-blue-50 text-blue-900 border border-blue-950/20 rounded-sm">
+            <div
+              className={`flex items-center space-x-4 ${onBack ? 'cursor-pointer group' : ''}`}
+              onClick={onBack}
+            >
+              <div className="p-3 bg-blue-50 text-blue-900 border border-blue-950/20 rounded-sm group-hover:bg-blue-100 transition-colors">
                 <GraduationCap size={36} className="stroke-[1.5]" />
               </div>
               <div>
-                <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 font-serif leading-none">
+                <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 font-serif leading-none group-hover:text-blue-900 transition-colors">
                   IMETRO
                 </h1>
                 <p className="text-[11px] tracking-wider uppercase text-blue-800 font-semibold mt-1">
