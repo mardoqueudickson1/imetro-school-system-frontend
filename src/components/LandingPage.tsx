@@ -6,9 +6,10 @@ interface LandingPageProps {
 }
 
 const CAROUSEL_IMAGES = [
-  { src: '/imetro1.jpg', caption: 'Campus IMETRO — Luanda, Angola' },
-  { src: '/imetro2.jpg', caption: 'Laboratório de Informática' },
-  { src: '/imetro3.jpg', caption: 'Cerimónia de Formatura' },
+  { src: '/2.jpg', caption: 'Campus IMETRO — Luanda, Angola' },
+  { src: '/1.jpeg', caption: 'Laboratório de Informática' },
+  { src: '/3.jpg', caption: 'Cerimónia de Outorga de Diplomas' },
+  { src: '/campus_bg.jpg', caption: 'Campus IMETRO — Vista Aérea' },
 ];
 
 const INTERVAL_MS = 5000;
