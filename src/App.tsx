@@ -55,7 +55,7 @@ function App() {
   }
 
   // Public routes
-  if (route === 'verify') return <DocumentVerifyPage />;
+  if (route === 'verify') return <DocumentVerifyPage onBack={() => setRoute('landing')} />;
   if (route === 'landing') {
     return (
       <LandingPage
@@ -67,7 +67,7 @@ function App() {
     );
   }
   if (route === 'login' || !authState) {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
+    return <Login onLoginSuccess={handleLoginSuccess} onBack={() => setRoute('landing')} />;
   }
 
   // Dashboard
