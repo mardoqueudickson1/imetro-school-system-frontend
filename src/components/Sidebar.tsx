@@ -10,7 +10,7 @@ import {
 
 interface SidebarProps {
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: 'STUDENT' | 'TEACHER' | 'ADMIN';

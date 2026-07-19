@@ -1,13 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Login } from './components/Login';
 import { Sidebar } from './components/Sidebar';
 import { AttendanceView } from './components/AttendanceView';
 import { DocumentsView } from './components/DocumentsView';
 import { SchedulerView } from './components/SchedulerView';
+import { Loader } from './components/Loader';
+import { DocumentVerifyPage } from './components/DocumentVerifyPage';
 
 function App() {
   const [authState, setAuthState] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'attendance' | 'document' | 'scheduler'>('attendance');
+  const [appLoading, setAppLoading] = useState(true);
+  const [tabLoading, setTabLoading] = useState(false);
+
+  // Splash screen on first mount
+  useEffect(() => {
+    const timer = setTimeout(() => setAppLoading(false), 1800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Public route: /verify — no auth required
+  if (window.location.pathname.startsWith('/verify')) {
+    return <DocumentVerifyPage />;
+  }
 
   const handleLoginSuccess = (data: any) => {
     setAuthState(data);
@@ -17,12 +32,41 @@ function App() {
     setAuthState(null);
   };
 
-  // If unauthorized, lock behind authentication wall portal
+  const handleTabChange = (tab: 'attendance' | 'document' | 'scheduler') => {
+    if (tab === activeTab) return;
+    setTabLoading(true);
+    setTimeout(() => {
+      setActiveTab(tab);
+      setTabLoading(false);
+    }, 400);
+  };
+
+  // Initial splash screen
+  if (appLoading) {
+    return <Loader message="A inicializar o sistema..." />;
+  }
+
+  // Auth wall
   if (!authState) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
   const renderActiveTab = () => {
+    if (tabLoading) {
+      return (
+        <div className="flex items-center justify-center h-64">
+          <div className="flex flex-col items-center space-y-4">
+            <div
+              className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-600"
+              style={{ animation: 'spin 0.8s linear infinite' }}
+            />
+            <p className="text-slate-400 text-xs tracking-wider">A carregar módulo...</p>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        </div>
+      );
+    }
+
     switch (activeTab) {
       case 'attendance':
         return <AttendanceView user={authState.user} />;
@@ -41,7 +85,7 @@ function App() {
       <Sidebar
         user={authState.user}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         onLogout={handleLogout}
       />
 

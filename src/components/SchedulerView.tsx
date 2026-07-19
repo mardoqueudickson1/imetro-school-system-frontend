@@ -10,7 +10,7 @@ import {
 
 interface SchedulerViewProps {
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: 'STUDENT' | 'TEACHER' | 'ADMIN';
@@ -216,10 +216,10 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
       )}
 
       {/* Main Grid: Form + Conflict Visualizer */}
-      <div className="grid md:grid-cols-3 gap-8 items-start">
+      <div className={`flex gap-8 items-start ${user.role === 'ADMIN' ? 'flex-row' : ''}`}>
         {/* Reservation Planner (Only ADMIN) */}
         {user.role === 'ADMIN' && (
-          <div className="bg-white border border-slate-200 rounded-sm p-6 space-y-5 md:col-span-1 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-sm p-6 space-y-5 w-80 shrink-0 shadow-sm">
             <h3 className="text-md font-bold text-slate-900 font-serif flex items-center space-x-2 border-b border-slate-100 pb-3">
               <Plus className="text-blue-900" size={18} />
               <span>Agendar Nova Aula</span>
@@ -340,7 +340,7 @@ export const SchedulerView: React.FC<SchedulerViewProps> = ({ user }) => {
         )}
 
         {/* Schedule grid view lists */}
-        <div className={`space-y-6 md:col-span-${user.role === 'ADMIN' ? 2 : 3}`}>
+        <div className="space-y-6 flex-1 min-w-0">
           <div className="bg-white border border-slate-200 rounded-sm p-6 shadow-sm">
             <h3 className="text-md font-bold text-slate-900 font-serif mb-4 flex items-center space-x-2 border-b border-slate-100 pb-3">
               <Calendar size={18} className="text-blue-900" />

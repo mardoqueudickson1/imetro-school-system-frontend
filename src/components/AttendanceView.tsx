@@ -12,7 +12,7 @@ import {
 
 interface AttendanceViewProps {
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: 'STUDENT' | 'TEACHER' | 'ADMIN';
