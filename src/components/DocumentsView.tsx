@@ -22,7 +22,8 @@ interface DocumentsViewProps {
 
 export const DocumentsView: React.FC<DocumentsViewProps> = ({ user }) => {
   // Issuance States (Admin)
-  const [studentId, setStudentId] = useState<number | ''>('');
+  const [studentId, setStudentId] = useState<string>('');
+  const [studentSearch, setStudentSearch] = useState('');
   const [docType, setDocType] = useState('DIPLOMA');
   const [loadingIssue, setLoadingIssue] = useState(false);
   const [issuedDoc, setIssuedDoc] = useState<any | null>(null);
@@ -62,7 +63,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ user }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          studentId: Number(studentId),
+          studentId,
           docType,
         }),
       });
@@ -205,18 +206,35 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ user }) => {
                 <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
                   Seleccionar Estudante Alvo
                 </label>
+                {/* Search filter */}
+                <input
+                  type="text"
+                  placeholder="Pesquisar por nome ou nº de estudante (ex: IM2024001)..."
+                  value={studentSearch}
+                  onChange={(e) => setStudentSearch(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-300 focus:border-blue-900 rounded-sm px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none transition mb-2"
+                />
                 <select
                   required
                   value={studentId}
-                  onChange={(e) => setStudentId(e.target.value === '' ? '' : Number(e.target.value))}
-                  className="w-full bg-slate-55 border border-slate-300 focus:border-blue-900 rounded-sm px-4 py-3 text-sm text-slate-800 outline-none transition"
+                  onChange={(e) => setStudentId(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-300 focus:border-blue-900 rounded-sm px-4 py-3 text-sm text-slate-800 outline-none transition"
                 >
                   <option value="">Selecione o estudante...</option>
-                  {students.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} (ID: {s.id})
-                    </option>
-                  ))}
+                  {students
+                    .filter((s) => {
+                      const q = studentSearch.toLowerCase();
+                      return (
+                        !q ||
+                        s.name.toLowerCase().includes(q) ||
+                        (s.studentNumber && s.studentNumber.toLowerCase().includes(q))
+                      );
+                    })
+                    .map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.studentNumber ? `[${s.studentNumber}] ` : ''}{s.name}
+                      </option>
+                    ))}
                 </select>
               </div>
 
